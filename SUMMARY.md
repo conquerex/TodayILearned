@@ -10,6 +10,8 @@
   * [View 환경 설정과 DB 설정](group/jpa/view-db.md)
   * [도메인 분석 설계](group/jpa/undefined-1.md)
   * [어플리케이션 구현 준비](group/jpa/undefined-2.md)
+  * [회원 도메인 개발](group/jpa/undefined-3.md)
+  * [상품 도메인 개발](group/jpa/undefined-4.md)
 * [안드로이드 프로그래밍](group/android-programming/README.md)
   * [03. 액티비티 생명주기](group/android-programming/03..md)
 
