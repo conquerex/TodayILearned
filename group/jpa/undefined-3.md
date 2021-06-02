@@ -54,6 +54,8 @@ description: '2021.06.01, 화요일'
     * @Test\(expected = IllegalStateException.class\) : try-catch가 필요 없어짐
 * test/resources/application.yml
   * 테스트에서 스프링 실행시 위 설정 파일을 읽음
+  * 혹시 H2 In-Memory용 datasource url이 필요하다면 \(Database URLs\)
+    * [https://www.h2database.com/html/cheatSheet.html](https://www.h2database.com/html/cheatSheet.html)
   * 별도의 datasource 설정 없음
     * 기본적인 메모리 DB 사용
     * driver-class도 현재 등록된 라이브러리를 보고 찾아줌
