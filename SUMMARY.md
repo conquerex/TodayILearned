@@ -26,4 +26,5 @@
   * [03. 액티비티 생명주기](group/android-programming/03..md)
 * [HTTP 웹 기본 지식](group/http/README.md)
   * [인터넷 네트워크](group/http/undefined.md)
+  * [URI와 웹 브라우저 요청 흐름](group/http/uri.md)
 
