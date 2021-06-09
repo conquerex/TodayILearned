@@ -65,7 +65,8 @@ model.addAttribute("members", members);
 model.addAttribute("members", memberService.findMembers());
 ```
 
-
-
+* F2
+  * 다음 에러로 포커싱
+* 
 
 
