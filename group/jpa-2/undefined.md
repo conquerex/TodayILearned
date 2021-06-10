@@ -9,7 +9,8 @@
 
 ### 실습 코드
 
-* 
+* [https://github.com/conquerex/WhatTheJpa2nd/commit/a56cb24e7ee51165472b1f8d6e2ad7f8dd08fe78](https://github.com/conquerex/WhatTheJpa2nd/commit/a56cb24e7ee51165472b1f8d6e2ad7f8dd08fe78)
+
 
 
 ### 학습 내용
