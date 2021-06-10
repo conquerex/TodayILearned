@@ -18,7 +18,7 @@
 * [https://github.com/conquerex/WhatTheJpa2nd/commit/bf6a22cdc4ef5a326b20928a4c6bd491456c3075](https://github.com/conquerex/WhatTheJpa2nd/commit/bf6a22cdc4ef5a326b20928a4c6bd491456c3075)
 * [https://github.com/conquerex/WhatTheJpa2nd/commit/ce880f7d44000038734891b9af776a021d7489cc](https://github.com/conquerex/WhatTheJpa2nd/commit/ce880f7d44000038734891b9af776a021d7489cc)
 * [https://github.com/conquerex/WhatTheJpa2nd/commit/b0932ec8e95465b7f8c7d0238c916fa6cc0c6dd3](https://github.com/conquerex/WhatTheJpa2nd/commit/b0932ec8e95465b7f8c7d0238c916fa6cc0c6dd3)
-* 
+
 
 
 ### 학습 내용

@@ -6,6 +6,12 @@
 
 
 
+### 실습 코드
+
+* [https://github.com/conquerex/WhatTheJpa2nd/commit/5a625a1cea3900b4fc7647e36f807ad82230b8b8](https://github.com/conquerex/WhatTheJpa2nd/commit/5a625a1cea3900b4fc7647e36f807ad82230b8b8)
+
+
+
 ### 학습 내용
 
 * Open Session in View : 하이버네이트
