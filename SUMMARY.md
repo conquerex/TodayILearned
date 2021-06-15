@@ -34,8 +34,14 @@
 * [안드로이드 프로그래밍](group/android-programming/README.md)
   * [03. 액티비티 생명주기](group/android-programming/03..md)
 * [HTTP 웹 기본 지식](group/http/README.md)
-  * [인터넷 네트워크](group/http/undefined.md)
-  * [URI와 웹 브라우저 요청 흐름](group/http/uri.md)
+  * [섹션 1. 인터넷 네트워크](group/http/undefined.md)
+  * [섹션 2. URI와 웹 브라우저 요청 흐름](group/http/uri.md)
+  * [섹션 3. HTTP 기본](group/http/3.-http.md)
+  * [섹션 4. HTTP 메서드](group/http/4.-http.md)
+  * [섹션 5. HTTP 메서드 활용](group/http/5.-http.md)
+  * [섹션 6. HTTP 상태코드](group/http/6.-http.md)
+  * [섹션 7. HTTP 헤더1 - 일반 헤더](group/http/7.-http-1.md)
+  * [섹션 8. HTTP 헤더2 - 캐시와 조건부 요청](group/http/8.-http-2.md)
 
 ---
 
