@@ -1,10 +1,4 @@
-# 섹션 6. HTTP 상태코드
-
-[Permalink](https://github.com/conquerex/TodayILearned/blob/b844deaa77fa2ba79267e0e57537ac4a1a1cbed5/group/http/http_5.md)
-
-Cannot retrieve contributors at this time
-
-## 섹션 5. HTTP 메서드 활용
+# 섹션 5. HTTP 메서드 활용
 
 ### 강의항목
 

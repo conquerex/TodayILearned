@@ -38,7 +38,7 @@
   * [섹션 2. URI와 웹 브라우저 요청 흐름](group/http/http_web_2.md)
   * [섹션 3. HTTP 기본](group/http/http_web_3.md)
   * [섹션 4. HTTP 메서드](group/http/http_web_4.md)
-  * [섹션 6. HTTP 상태코드](group/http/http_web_5.md)
+  * [섹션 5. HTTP 메서드 활용](group/http/http_web_5.md)
   * [섹션 6. HTTP 상태코드](group/http/http_web_6.md)
   * [섹션 7. HTTP 헤더1 - 일반 헤더](group/http/http_web_7.md)
   * [섹션 8. HTTP 헤더2 - 캐시와 조건부 요청](group/http/http_web_8.md)
