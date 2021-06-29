@@ -14,3 +14,7 @@ _book
 *.epub
 *.mobi
 *.pdf
+
+######## ADD ########
+.DS_Store
+group/.DS_Store
