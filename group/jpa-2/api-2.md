@@ -1,31 +1,25 @@
 # API 개발 고급 - 지연 로딩과 조회 성능 최적화
 
-### 강의 항목
+## 강의 항목
 
 * 간단한 주문 조회 V1: 엔티티를 직접 노출
 * 간단한 주문 조회 V2: 엔티티를 DTO로 변환
 * 간단한 주문 조회 V3: 엔티티를 DTO로 변환 - 페치 조인 최적화
 * 간단한 주문 조회 V4: JPA에서 DTO로 바로 조회
 
-
-
-### 실습 코드
+## 실습 코드
 
 * [https://github.com/conquerex/WhatTheJpa2nd/commit/55f4eb9ece51347367fd95b70a49ba6481eeae88](https://github.com/conquerex/WhatTheJpa2nd/commit/55f4eb9ece51347367fd95b70a49ba6481eeae88)
 * [https://github.com/conquerex/WhatTheJpa2nd/commit/3aa0b8d12a129f65f7cbd92d3f98551e6c29438e](https://github.com/conquerex/WhatTheJpa2nd/commit/3aa0b8d12a129f65f7cbd92d3f98551e6c29438e)
 * [https://github.com/conquerex/WhatTheJpa2nd/commit/5df0ea0a00a6db186cac911be94ad8bdd79dd413](https://github.com/conquerex/WhatTheJpa2nd/commit/5df0ea0a00a6db186cac911be94ad8bdd79dd413)
 
-
-
-### 학습 내용
+## 학습 내용
 
 * API 개발 고급 - 지연 로딩과 조회 성능 최적화
   * 주문 + 배송정보 + 회원을 조회하는 API를 만들자
   * 지연 로딩 때문에 발생하는 성능 문제를 단계적으로 해결해보자
 
-
-
-#### V1: 엔티티를 직접 노출
+### V1: 엔티티를 직접 노출
 
 * xToOne\(ManyToOne, OneToOne\) 관계 최적화
   * Order
@@ -55,9 +49,7 @@ implementㅌation 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate5'
   * 성능 튜닝이 매우 어려워 진다.
   * 성능 최적화가 필요한 경우에는 페치조인\(fetch join\)을 사용
 
-
-
-#### V2: 엔티티를 DTO로 변환
+### V2: 엔티티를 DTO로 변환
 
 * 단점 : 지연로딩으로 쿼리 N번 호출 \(N + 1 문제\)
 * order 조회시 쿼리가 1 + N + N번 실행
@@ -71,18 +63,14 @@ implementㅌation 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate5'
   * 이미 조회된 경우 쿼리 수행하지 X
   * 최악이 아니다 뿐이지 안좋기는 마찬가지
 
-
-
-#### V3: 엔티티를 DTO로 변환 - 페치 조인 최적화
+### V3: 엔티티를 DTO로 변환 - 페치 조인 최적화
 
 * fetch 조인 : LAZY 무시하고 객체를 가지고 온다
   * 쿼리 1번에 조회
 * 페치 조인으로 order --&gt; member, order --&gt; delivery는 이미 조회된 상태
   * 지연 로딩 X
 
-
-
-#### V4: JPA에서 DTO로 바로 조회
+### V4: JPA에서 DTO로 바로 조회
 
 * 쿼리 1회 호출
 * select 절에서 원하는 필드만 선택해서 조회
@@ -93,9 +81,7 @@ implementㅌation 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate5'
   * API 스펙에 맞춘 코드가 레포지토리에 들어가는 단점
   * 별도의 패키지로 관리하면 유지보수성이 올라감
 
-
-
-#### 정리
+### 정리
 
 * 방법
   * 엔티티를 DTO로 변환

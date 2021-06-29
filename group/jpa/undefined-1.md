@@ -4,7 +4,7 @@ description: '2021.05.31, 월요일'
 
 # 도메인 분석 설계
 
-### 강의 항목
+## 강의 항목
 
 * 요구사항 분석
 * 도메인 모델과 테이블 설계
@@ -12,9 +12,7 @@ description: '2021.05.31, 월요일'
 * 엔티티 클래스 개발2
 * 엔티티 설계시 주의점
 
-
-
-### 학습 내용
+## 학습 내용
 
 ![&#xB3C4;&#xBA54;&#xC778; &#xBAA8;&#xB378;](blob:https://app.gitbook.com/5f4d7a59-9ab7-41da-8a9c-e3a10528a11e)
 
@@ -28,9 +26,6 @@ description: '2021.05.31, 월요일'
   * 값 타입, 임베디드 타입 : Address.class
   * @Enumerated\(EnumType.STRING\)
   * 다대다 관계
-
-
-
 * 엔티티 클래스 개발
   * Getter는 OK
     * BUT!!! Setter는 닫는게 좋다.
@@ -41,8 +36,6 @@ description: '2021.05.31, 월요일'
 
 > 여기까지 코드  
 > [https://github.com/conquerex/WhatTheJpa2nd/commit/6cb76ded6271e3646f34bc6eb8cc9803fd9f1eb5](https://github.com/conquerex/WhatTheJpa2nd/commit/6cb76ded6271e3646f34bc6eb8cc9803fd9f1eb5)
-
-
 
 * 엔티티 설계시 주의점
   * Setter는 가급적 사용말자
@@ -68,10 +61,4 @@ description: '2021.05.31, 월요일'
 
 > 여기까지 코드  
 > [https://github.com/conquerex/WhatTheJpa2nd/commit/2cf251cfc84682cb4de9a66abf2b49510fb251d8](https://github.com/conquerex/WhatTheJpa2nd/commit/2cf251cfc84682cb4de9a66abf2b49510fb251d8)
-
-
-
-
-
-
 

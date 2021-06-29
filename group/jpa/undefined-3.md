@@ -4,21 +4,17 @@ description: '2021.06.01, 화요일'
 
 # 회원 도메인 개발
 
-### 강의 항목
+## 강의 항목
 
 * 회원 리포지토리 개발
 * 회원 서비스 개발
 * 회원 기능 테스트
 
-
-
-### 실습 코드
+## 실습 코드
 
 * [https://github.com/conquerex/WhatTheJpa2nd/commit/dc95ecb04f440c9e4441f8b645f82b432e298006](https://github.com/conquerex/WhatTheJpa2nd/commit/dc95ecb04f440c9e4441f8b645f82b432e298006)
 
-
-
-### 학습 내용
+## 학습 내용
 
 * 스프링 빈 등록
   * @Repository
@@ -61,6 +57,4 @@ description: '2021.06.01, 화요일'
     * driver-class도 현재 등록된 라이브러리를 보고 찾아줌
   * 별도의 jpa 설정 없음
     * ddl-auto : create-drop 모로 동작
-
-
 

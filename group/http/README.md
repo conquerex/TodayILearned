@@ -4,13 +4,9 @@ description: 김영한 강사님의 인프런 강의를 기반으로 학습합�
 
 # HTTP 웹 기본 지식
 
-### 강의링크
+## 강의링크
 
-{% embed url="https://www.inflearn.com/course/http-%EC%9B%B9-%EB%84%A4%ED%8A%B8%EC%9B%8C%ED%81%AC" %}
-
-
-
-
+{% embed url="https://www.inflearn.com/course/http-%EC%9B%B9-%EB%84%A4%ED%8A%B8%EC%9B%8C%ED%81%AC" caption="" %}
 
 섹션 1. 인터넷 네트워크
 

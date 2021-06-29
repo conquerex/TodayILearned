@@ -4,7 +4,7 @@ description: '2021.06.01, 화요일'
 
 # 웹 계층 개발 \(회원, 상품\)
 
-### 강의 항목
+## 강의 항목
 
 * 홈 화면과 레이아웃
 * 회원 등록
@@ -13,16 +13,12 @@ description: '2021.06.01, 화요일'
 * 상품 목록
 * 상품 수정
 
-
-
-### 실습 코드
+## 실습 코드
 
 * [https://github.com/conquerex/WhatTheJpa2nd/commit/205fa47cf1eb3d88735e9fc171dfbdb1a6f9957b](https://github.com/conquerex/WhatTheJpa2nd/commit/205fa47cf1eb3d88735e9fc171dfbdb1a6f9957b)
 * [https://github.com/conquerex/WhatTheJpa2nd/commit/462a92be4528e0c55e09d39f4e00210ef5b4477e](https://github.com/conquerex/WhatTheJpa2nd/commit/462a92be4528e0c55e09d39f4e00210ef5b4477e)
 
-
-
-### 학습 내용
+## 학습 내용
 
 * 타임리프\(Thymeleaf\) 관련된 내용은 생략 😉
 * 컨트롤러 개발
@@ -53,8 +49,4 @@ spring:
   * 화면이나 API에 맞는 폼 객체나 DTO를 사용하자
 * 상품 등록 및 조회, 수정
   * 회원 등록과 크게 다르지 않
-
-
-
-
 

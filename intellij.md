@@ -8,7 +8,7 @@ description: 어우~ 유용한 것
   * 아래 라이브러리 추가 후
   * Menu --&gt; Build --&gt; Recompile
 
-```
+```text
 implementation 'org.springframework.boot:spring-boot-devtools'
 ```
 
@@ -36,9 +36,9 @@ implementation 'org.springframework.boot:spring-boot-devtools'
         // given
         $END$
         // when
-    
+
         // then
-    
+
     }
     ```
 * 자동 변수 추출
@@ -68,5 +68,3 @@ model.addAttribute("members", memberService.findMembers());
 * F2
   * 다음 에러로 포커싱
 * 
-
-

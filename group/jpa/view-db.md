@@ -4,15 +4,13 @@ description: '2021.05.31, 월요일'
 
 # View 환경 설정과 DB 설정
 
-### 강의 항목
+## 강의 항목
 
 * View 환경 설정
 * H2 데이터베이스 설치
 * JPA와 DB 설정, 동작확인
 
-
-
-### 학습 내용
+## 학습 내용
 
 ```java
 import org.springframework.stereotype.Controller;
@@ -58,17 +56,12 @@ Hello
 </html>
 ```
 
-
-
 * H2 Database
   * [https://www.h2database.com/html/main.html](https://www.h2database.com/html/main.html)
   * 1.4.199 버전이 좀 더 안정화 되어 있음
   * jdbc:h2:~/jpashop \(최소 한번\)
   * ~/jpashop.mv.db 파일 생성 확인
   * 이후 부터는 jdbc:h2:tcp://localhost/~/jpashop
-
-
-
 * main/resources/application.yml 추가
   * 띄어쓰기 2칸 간격 주의!!!
   * spring.jpa.hibernate.ddl-auto
@@ -186,8 +179,6 @@ public class MemberRepositoryTest {
 }
 ```
 
-
-
 ```text
 Assertions.assertThat(findMember).isEqualTo(member);
 System.out.println("findMember == member : " + (findMember == member));
@@ -205,8 +196,4 @@ System.out.println("findMember == member : " + (findMember == member));
 ```text
 implementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.7.1")
 ```
-
-
-
-
 

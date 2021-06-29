@@ -4,21 +4,17 @@ description: '2021.06.04, 금요일'
 
 # API 개발 기본
 
-### 강의 항목
+## 강의 항목
 
 * 회원 등록 API
 * 회원 수정 API
 * 회원 조회 API
 
-
-
-### 실습 코드
+## 실습 코드
 
 * [https://github.com/conquerex/WhatTheJpa2nd/commit/17ff5cbeb5430779ca6a2ed6ea9b1640a3f9cc8b](https://github.com/conquerex/WhatTheJpa2nd/commit/17ff5cbeb5430779ca6a2ed6ea9b1640a3f9cc8b)
 
-
-
-### 학습 내용
+## 학습 내용
 
 * 등록 V1
   * 요청 값으로 Member 엔티티를 직접 받는다

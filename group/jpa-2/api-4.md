@@ -1,18 +1,14 @@
 # API 개발 고급 - 실무 필수 최적화
 
-### 강의 항목
+## 강의 항목
 
 * OSIV와 성능 최적화
 
-
-
-### 실습 코드
+## 실습 코드
 
 * [https://github.com/conquerex/WhatTheJpa2nd/commit/5a625a1cea3900b4fc7647e36f807ad82230b8b8](https://github.com/conquerex/WhatTheJpa2nd/commit/5a625a1cea3900b4fc7647e36f807ad82230b8b8)
 
-
-
-### 학습 내용
+## 학습 내용
 
 * Open Session in View : 하이버네이트
 * Open EntityManager In View : JPA
@@ -38,14 +34,13 @@ JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by
 
 ```text
 jpa:
-	hibernate:
-		ddl-auto: create
-	properties:
-		hibernate:
-			format_sql: true
-			default_batch_fetch_size: 1000
-	open-in-view: false
-
+    hibernate:
+        ddl-auto: create
+    properties:
+        hibernate:
+            format_sql: true
+            default_batch_fetch_size: 1000
+    open-in-view: false
 ```
 
 * OSIV off
@@ -75,6 +70,4 @@ jpa:
     * ADMIN처럼 커넥션을 많이 사용하지 않는 곳
   * OSIV off
     * 고객 서비스의 실시간 API
-
-
 

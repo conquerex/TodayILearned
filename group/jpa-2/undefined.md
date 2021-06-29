@@ -1,19 +1,15 @@
 # 다음으로
 
-### 강의 항목
+## 강의 항목
 
 * 스프링 데이터 JPA 소개
 * QueryDSL 소개
 
-
-
-### 실습 코드
+## 실습 코드
 
 * [https://github.com/conquerex/WhatTheJpa2nd/commit/a56cb24e7ee51165472b1f8d6e2ad7f8dd08fe78](https://github.com/conquerex/WhatTheJpa2nd/commit/a56cb24e7ee51165472b1f8d6e2ad7f8dd08fe78)
 
-
-
-### 학습 내용
+## 학습 내용
 
 * 스프링 데이터 JPA
   * [https://spring.io/projects/spring-data-jpa](https://spring.io/projects/spring-data-jpa)
@@ -45,6 +41,4 @@
     * JPA로 애플리케이션을 개발 할 때 선택이 아닌 필수
 
 ![](../../.gitbook/assets/image%20%281%29.png)
-
-
 

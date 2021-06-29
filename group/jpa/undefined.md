@@ -4,16 +4,14 @@ description: '2021.05.31, 월요일'
 
 # 프로젝트 생성
 
-### 강의 항목
+## 강의 항목
 
 * 강좌 소개
 * 수업 자료
 * 프로젝트 생성
 * 라이브러리 살펴보기
 
-
-
-### 학습 내용
+## 학습 내용
 
 * Spring boot를 IntelliiJ와 스프링부트 홈페이지에서 생성할 수 있다.
   * Dependencies 추가를 쉽게 하기 위해서는 스프링부트 [홈페이지](https://start.spring.io/)에서 하는 것이 좋다.
@@ -61,7 +59,6 @@ dependencies {
 test {
     useJUnitPlatform()
 }
-
 ```
 
 * 추가하는 Dependencies
@@ -92,13 +89,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class Jpa2ndApplication {
 
-	public static void main(String[] args) {
-		Hello hello = new Hello();
-		hello.setData("ddd");
-		String data = hello.getData();
+    public static void main(String[] args) {
+        Hello hello = new Hello();
+        hello.setData("ddd");
+        String data = hello.getData();
 
-		SpringApplication.run(Jpa2ndApplication.class, args);
-	}
+        SpringApplication.run(Jpa2ndApplication.class, args);
+    }
 
 }
 ```
@@ -110,9 +107,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class Jpa2ndApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+    @Test
+    void contextLoads() {
+    }
 
 }
 ```
@@ -121,6 +118,4 @@ class Jpa2ndApplicationTests {
   * Preferences --&gt; Build, Execution, Deployment --&gt; Build Tools --&gt; Gradle
   * Build and run using : **IntelliJ IDEA**
   * Run tests using : **IntelliJ IDEA**
-
-
 
