@@ -66,4 +66,67 @@
     * 바이트 단위
     * Transfer-Encoding\(전송 코딩\)을 사용하면 Content-Length를 사용하면 안됨
   * 표현 헤더는 전송, 응답 둘 다 사용
+* 협상 \(콘텐츠 네고시에이션\)
+  * 클라이언트가 선호하는 표현 요청
+  * Accept: 클라이언트가 선호하는 미디어 타입 전달
+    * 클라이언트가 저런 타입을 달라고 하는 것
+  * Accept-Charset
+  * Accept-Encoding
+  * Accept-Language
+  * 협상 헤더는 요청시에만 사용
+* Accept-Language 적용 전
+  * 한국어 브라우저 사용
+  * GET /event
+  * 다중 언어 지원 서버
+    * 기본 : 영어
+    * 한국어 지원
+  * 영어로 응답
+* Accept-Language 적용 전
+  * GET /event
+    * Accept-Language: ko
+  * 한국어로 응답
+* Accept-Language 복잡한 예시
+  * 한국어 브라우저
+  * GET /event
+    * Accept-Language: ko
+  * 다중 언어 지원 서버
+    * 기본 : 독일어
+    * 영어 지원
+  * 한국어는 옵션에 없네????
+* 협상과 우선 순
+  * Quality Values\(q\)
+  * 0~1, 클수록 높은 우선순위
+  * 생략하면 1
+  * accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+  * 구체적인 것이 우선한
+    * Accept: text/\*, text/plain, text/plain;format-flowed, \*/\*
+    * 1순위 : text/plain;format-flowed
+    * 4순위 : \*/\*
+  * 구체적인 것을 기준으로 미디어 타입을 맞춘다.
+    * Accep: text/\*;q=0.3, text/html;q=0.7, text/html;level=1
+    * text/html;level=1
+      * q : 1
+    * text/html
+      * q : 0.7
+    * text/plain
+      * q : 0.3 \("text/\*"와 가장 가깝기 때문\)
+
+![](../../.gitbook/assets/2021-07-01-9.00.51.png)
+
+
+
+* 전송 방식
+  * 단순 전송
+    * Content-Length를 알 수 있을 때
+  * 압축 전송
+    * Content-Enoding을 알 수 있을 때
+  * 분할 전송
+    * Transfer-Encoding을 알 수 있을 때
+    * 예\) Transfer-Encoding: chunked \(쪼개다는 의미\)
+    * Content-Length를 보내면 안됨
+  * 범위 전송
+    * Range, Content-Range
+    * 요청 예\) Range: bytes=1001-2000
+    * 응답 예\) Content-Range: bytes 1001-2000/2000
+* 일반 정보
 
