@@ -129,4 +129,29 @@
     * 요청 예\) Range: bytes=1001-2000
     * 응답 예\) Content-Range: bytes 1001-2000/2000
 * 일반 정보
+  * From : 유저 에이전트의 이메일 정보
+    * 요청에서 사용
+    * 검색엔진 같은 곳에서 주로 사용 \(일반적으로 사용 X\)
+    * \[ 잘 이해가 안감 ㅋ \]
+  * Referer : 이전 웹 페이지 주
+    * 현재 요청된 페이지의 이전 웹 페이지 주소
+    * A -&gt; B로 이동하는 경우, B를 요청할 때 Referer: A를 포함해서 요청
+    * 유입 경로 분석 가능
+    * 요청서 사용
+    * 참고 : referer는 단어 referrer의 오타 \(ㅋㅋㅋㅋ\)
+  * User-Agent : 유저 에이전트 애플리케이션 정보
+    * user-agent: Mozilla/5.0 \(iPhone; CPU iPhone OS 13\_2\_3 like Mac OS X\) AppleWebKit/605.1.15 \(KHTML, like Gecko\) Version/13.0.3 Mobile/15E148 Safari/604.1
+    * 클라이언트의 애플리케이션 정보 \(베 브라우저 정보 등\)
+    * 통계 정보
+    * 어떤 종류의 브라우저에서 장애가 발생하는지 파악 가능
+    * 요청에 사용
+  * Server : 요청을 처리하는 ORIGIN 서버의 소프트웨어 정보
+    * ORIGIN 서버 : 응답을 해주는 진짜 서버, 노드 서버는 아님
+    * Server: Apache/2.2.22 \(Debian\)
+    * server: nginx
+    * 응답에서 사용
+  * Date : 메시지가 발생한 날짜와 시간
+    * 응답에서 사용
+* 특별한 정보
+  * 
 
