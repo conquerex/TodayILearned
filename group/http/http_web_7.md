@@ -153,5 +153,39 @@
   * Date : 메시지가 발생한 날짜와 시간
     * 응답에서 사용
 * 특별한 정보
-  * 
+  * Host : 요청한 호스트 정보 \(도메인\)
+    * 필수!!!
+    * 요청에서 사용
+    * 하나의 IP주소에 여러 도메인이 적용되어 있을 때
+      * 하나의 서버가 여러 도메인을 처리해야 할 때
+    * 가상 호스트를 통해 여러 도메인을 한번에 처리할수 있는 서버가 있다
+      * 실제 애플리케이션이 여러개 구동될 수 있다
+      * GET /hello
+      * Host: aaa.com
+    * TCP/IP는 IP로만 통신, 호스트\(도메인\)를 넣음으로서 원하는 곳으로 도달
+  * Location : 페이지 리다이렉션
+    * 웹 브라우저는 3xx 응답의 결과에 Location 헤더가 있으면
+      * Location 위치로 자동 이동 \(리다이렉트\)
+    * 응답코드 3xx에서 설명
+    * 201 \(Created\): Location 값은 요청에 의해 생성된 리소스 URI
+    * 3xx \(Redirction\): Location 값은 요청을 자동으로 리다이렉션하기 위한 대상 리소스를 가리킴
+  * Allow : 허용 가능한 HTTP 메서드
+    * 405\(Method Not Allowed\)에서 응답에 포함해야 함
+    * 많이 사용은 안함
+    * 예\) Allow: GET, HEAD, PUT
+  * Retry-After : 유저 에이전트가 다음 요청을 하기까지 기다려야 하는 시간
+    * 503\(Service Unavailable\): 서비스가 언제까지 불능인지 알려줄 수 있
+    * 날짜 표기 혹은 초단위 표기
+* 인증
+  * Authorization
+    * 클라이언트 인증 정보를 서버에 전달
+    * Authorization: Basic xxxxxxxxxxxxxxxxxxxxxxx
+    * 메커니즘마다 value가 다르다 \(예. OAuth\)
+  * WWW-Authenticate
+    * 리소스 접근시 필요한 인증 방법 정의
+    * 401 Unauthorized 응답과 함께 사용
+    * 인증을 하려면 아래의 정보를 참고해서 제대로 된 정보를 만들라고 알려줌
+      * 공식 스펙에서 가지고 온 예\)WWW-Authenticate: Newauth realm="apps", type=1, title="Login to \"apps\"", Basic realm="simple"
+
+
 
