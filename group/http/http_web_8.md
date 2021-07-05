@@ -126,7 +126,66 @@
   * 조건부 요청 헤더
     * If-Match, If-None-Match: ETag 값 사용
     * If-Modified-Since, If-Unmodified-Since: Last-Modified 값 사용
-* 
+
+
+
+* 원\(origin\) 서버 직접 접근
+  * 한국에 있는 클라이언트, 미국에 있는 원 서버 \(500ms\)
+  * 프록시 캐시 서버 \(한국 어딘가, 예-클라우드 프론트\)
+    * 첫번째 유저는 느리지만
+    * 그 다음 유저부터는 빠르다
+  * 웹 브라우저에서 프록시 캐시 서버 \(100ms\)
+    * 웹 브라우저 : private 캐시
+    * 프록시 캐시 서버 : public 캐시
+* Cache-Control
+  * 캐시 지시어\(directives\) - 기타
+  * Cache-Control : public
+    * 응답이 public 캐시에 저장되어도 됨
+  * Cache-Control : private
+    * 응답이 해당 사용자만을 위한 것. private 캐시에 저장해야 됨\(기본값\)
+  * Cache-Control : s-maxage
+    * 이런게 있다 정도만 알면 됨
+    * 프록시 캐시에만 적용되는 max-age
+  * Age: 60 \(HTTP 헤더\)
+    * 이런게 있다 정도만 알면 됨
+    * 오리진 서버에서 응답 후 프록시 캐시 내에 머문 시간\(초\)
+
+
+
+* 캐시 무효화
+  * Cache-Control
+  * 확실한 캐시 무효화 응답
+  * Cache-Control: no-cache, no-store, must-revalidate
+  * Pragma: no-cache
+    * HTTP 1.0 하위 호환
+* 캐시 지시어\(directives\) - 확실한 캐시 무효화
+  * Cache-Control : no-cache
+    * 데이터는 캐시해도 되지만, 항상 원 서버에 검증하고 사용 \(이름에 주의!!\)
+  * Cache-Control : no-store
+    * 데이터에 민감한 정보가 있으므로 저장하면 안됨
+    * 메모리에서 사용하고 최대한 빨리 삭제
+  * Cache-Control : must-revalidate
+    * 캐시 만료후 최초 조회시 원 서버에 검증해야함
+    * 원 서버 접근 실패시 반드시 오류가 발생해야 함
+      * 504 Gateway Timeout
+    * must-revalidate는 캐시 유효 시간이라면 캐시를 사용
+  * Pragma: no-cache
+    * HTTP 1.0 하위 호환
+* no-cache VS must-revalidate
+  * no-cache
+    * 캐시 서버 요청 : no-cache + ETag
+    * 원 서버 요청 : no-cache + ETag
+    * 원 서버 검증
+    * 프록시 캐시로 응답 : 304
+    * 웹 브라우저로 응답 : 304
+    * 브라우저 캐시에서 캐시 데이터 사용
+    * 순간 네트워크 단절 \(원 서버 접근 불가\)
+      * 오류보다 오래된 데이터라도 : 200 OK
+  * must-revalidate
+    * 순간 네트워크 단절 \(원 서버 접근 불가\)
+      * 504 Gateway Timeout
+      * 매우 중요한 돈과 관련된 결과로 생각해보
+
 
 
 ....끄읏.....
