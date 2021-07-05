@@ -63,6 +63,69 @@
     * 클라이언트는 캐시에 저장되어 있는 데이터 재활용
     * 결과적으로 네트워크 다운로드가 발생하지만 용량이 적은 헤더 정보만 다운로드
     * 매우 실용적인 해결책
+* 위 중요한 부분을 다시 확인
+  * 검증헤더
+    * 캐시 데이터와 서버 데이터가 같은지 검증하는 데이터
+    * Last-Modified, ETag
+  * 조건부 요청 헤더
+    * 검증 헤더로 조건에 따른 분기
+    * If-Modified-Since: Last-Modified 사용
+    * If-None-Match: ETag 사용
+    * 조건이 만족하면 200 OK
+    * 조건이 만족하지 않으면 304 Not Modified
+* If-Modified-Since: 이후에 데이터가...
+  * 데이터 미변경
+    * 캐시, 서버의 최종 수정일 동일
+    * 304 Not Modified, 헤더만 전송
+  * 데이터 변경
+    * 캐시, 서버의 최종 수정일 동일 X
+    * 200 OK, 모든 데이터 전송
+* Last-Modified, If-Modified-Since 단점
+  * 1초 미만 단위로 캐시 조정 불가능
+  * 날짜 기반의 로직 사용
+  * 데이터를 수정해서 날짜는 다르지만 같은 데이터를 수정해서 데이터 결과가 똑같은 경우
+  * 서버에서 별도의 캐시 로직을 관리하고 싶은 경우
+    * 스페이스나 주석처럼 크게 영향이 없는 변경에서 캐시를 유지하고 싶은 경우
+* ETag, If-None-Match
+  * Entity Tag
+  * 캐시용 데이터에 임의의 고유한 버전 이름을 달아둠
+    * 예\) ETag: "v1.0"
+    * 예\) ETag: "a89dsakjb3"
+  * 데이터가 변경되면 이 이름을 바꾸어서 변경함 \(Hash를 다시 생성\)
+    * 예\) ETag: "aaaa" ---&gt; ETag: "bbbb"
+  * 진짜 단순하게 ETag만 보내서 같으면 유지, 다르면 다시 받기
+  * **캐시 제어 로직을 서버에서 완전히 관리**
+  * 클라이언트는 단순히 이 값을 서버에 제공\(클라이언트는 캐시 메커니즘을 모름\)
+    * 예\) 서버는 베타 오픈 기간인 3일 동안 파일이 변경되어도 ETag를 동일하게 유지 \(예시를 만들기 위해 억지로 만든 사례\)
+    * 예\) 애플리케이션 배포 주기에 맞추어 ETag 모두 갱신
+* 캐시 제어 헤더
+  * Cashe-Control \(가장 중요!!\)
+    * 캐시 제어, 캐시 지시어\(directives\)
+    * Cache-Control : max-age
+      * 캐시 유효 시간, 초단위
+    * Cache-Control : no-cache
+      * 데이터는 캐시해도 되지만, 항상 원\(origin, 중간 캐시 서버 말고\) 서버에 검증하고 사용
+    * Cache-Control : no-store
+      * 데이터에 민감한 정보가 있으므로 저장하면 안됨
+      * 메모리에서 사용하고 최대한 빨리 삭제
+  * Pragma
+    * 캐시 제어\(하위 호환\)
+    * Pragma: no-cache
+    * HTTP 1.0 하위 호
+  * Expires
+    * 캐시 만료일 지정 \(하위 호환\)
+    * expires: Mon, 01 Jan 1990 11:00:00 GMT
+    * 캐시 만료일을 정확한 날짜로 지정
+    * HTTP 1.0부터 사용
+    * 지금은 더 유연한 Cache-Control : max-age 권장
+      * 함께 사용하면 Expires는 무시
+* 자... 다시 정리
+  * 검증 헤더 \(Validator\)
+    * ETag: "v1.0", ETag: "asdva77dafbda3"
+    * Last-Modified: Mon, 01 Jan 2015 11:00:00 GMT
+  * 조건부 요청 헤더
+    * If-Match, If-None-Match: ETag 값 사용
+    * If-Modified-Since, If-Unmodified-Since: Last-Modified 값 사용
 * 
 
 
