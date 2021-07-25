@@ -28,7 +28,7 @@
     * POST 전송 - 저장 : 웹브라우저가 요청 HTTP 메시지를 생성
       * HTTP 바디에 key-value 값이 들어감
     * GET 전송 - 조회
-    * HTML From submit시 POST 전송
+    * HTML Form submit시 POST 전송
       * 예\) 회원가입, 상품 주문 등
     * Content-Type : application/x-www-form-urlencoded 사용
       * form의 내용을 메시지 바디를 통해 전송
