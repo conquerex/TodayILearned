@@ -43,7 +43,7 @@
   * [섹션 7. HTTP 헤더1 - 일반 헤더](group/http/http_web_7.md)
   * [섹션 8. HTTP 헤더2 - 캐시와 조건부 요청](group/http/http_web_8.md)
 * [자바 ORM 표준 JPA 프로그래밍](group/orm-jpa/README.md)
-  * [1장. JPA 소개](group/orm-jpa/1-.-jpa.md)
+  * [1장. JPA 소개](group/orm-jpa/introduction_jpa.md)
 
 ---
 
