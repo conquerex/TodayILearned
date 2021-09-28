@@ -94,7 +94,7 @@
   * 데이터는 관계형 데이터베이스에 저장
   * 개발자가 중간에서 패러다임 불일치를 해결해야
 
-![](../../.gitbook/assets/image%20%287%29.png)
+![](../../.gitbook/assets/image%20%288%29.png)
 
 * \[불일치 이슈 1\] 상속
   * 객체는 상속 기능이 있지만 테이블은 없다
@@ -211,7 +211,7 @@ Member member = jpa.find(memberId);
 
 
 
-![ORM&#xC740; &#xC5EC;&#xB7EC; &#xD50C;&#xB7AB;&#xD3FC;&#xC5D0;&#xC11C; &#xB4F1;&#xC7A5;&#xD55C;&#xB2E4;](../../.gitbook/assets/image%20%286%29.png)
+![ORM&#xC740; &#xC5EC;&#xB7EC; &#xD50C;&#xB7AB;&#xD3FC;&#xC5D0;&#xC11C; &#xB4F1;&#xC7A5;&#xD55C;&#xB2E4;](../../.gitbook/assets/image%20%287%29.png)
 
 ### ORM에 대한 궁금증과 오해
 
