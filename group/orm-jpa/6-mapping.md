@@ -14,7 +14,11 @@
     * 하지만 엔티티를 양방향으로 매핑하면 2곳에서 서로를 참조 (관리 포인트 2곳)
     * 주인 : 두 객체 연관관계 중 하나를 정해서 데이터베이스 외래키를 관리
 
-<br>
+    <br>
+
+    <img src="../../group/orm-jpa/image/6-pass.jpeg" width="300px" title="Github_Logo"/>
+
+<br><br>
 
 ## 6.1 다대일
 
@@ -88,7 +92,7 @@
   * 근데 일대다 단방향에서는 대상 테이블에 외래키가 있는 매핑이 되었다?
     * JPA 2.0부터 지원 but 일대일은 안됨
 
-     <img src="../../group/orm-jpa/image/6-back.png" width="300px" title="Github_Logo"/><br><br>
+     <img src="../../group/orm-jpa/image/6-back.png" width="360px" title="Github_Logo"/><br><br>
 
   * 사물함이 주 테이블일 때, 양방향
     * 대상 엔티티인 사물함을 주인으로 만들어서 사물함 테이블의 외래키를 관리하도록
@@ -151,6 +155,11 @@
       * 예) 상품의 기본키를 자신의 기본키로 + 상품과의 관계를 위한 외래키로
       * MemberProductId 식별자 클래스로 두 기본키를 묶어서 복합키로 사용
         * 복합키, 식별관계, @IdClass, @EmbeddedId 등은 7장에서 자세히
+
+        <br> <br>
+
+        <img src="../../group/orm-jpa/image/6-no.jpeg" width="360px" title="Github_Logo"/><br>
+
     * 복합키를 사용하는 방법 : 복잡
       * 지금까지는 기본키가 단순
       * 복합키는 항상 식별자 클래스를 만들어야 (기본키를 위한 객체)
@@ -160,6 +169,7 @@
         * @IdClass 또는 @EmbeddedId도 사용
         * 식별자 클래스에 equals, hashCode 구현도
     * 이런 복합키를 사용하지 않는 방법이 있다
+
 * 다대다 : 새로운 기본키 사용
   * (추천) 데이터베이스에서 자동으로 생성해주는 대리키를 Long 값으로 사용하는 것
   * 장점 : 간편 + 거의 영구히 사용가능 + 비즈니스에 의존하지 않음
