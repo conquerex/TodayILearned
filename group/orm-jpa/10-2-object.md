@@ -1,0 +1,208 @@
+# 10장. 객체지향 쿼리 언어
+
+## 3. Criteria
+
+- JPQL을 자바 코드로 작성하도록 도와주는 빌더 클래서 API
+    - 문자가 아닌 코드로 JPQL을 작성하므로
+        - 문법 오류를 컴파일 단계에서 잡을 수 있고
+        - 문자 기반의 JPQL보다 동적 쿼리를 안전하게 생성
+    - BUT, 코드가 복잡 + 장황해서 직관적으로 이해하기 힘들다
+- 기초
+    - javax.persistence.criteria 패키지
+    - 단순 조회 JPQL
+        - Criteria 쿼리를 생성하려면 먼저 Criteria 빌더(CriteriaBuilder)를 얻어야 한다.
+            - 이 빌더는 EntityManager나 EntityMagerFactory에서 얻을 수 있다
+        - Criteria 쿼리 빌더에서 Criteria 쿼리(CriteriaQuery)를 생성
+            - 이때 반환 타입을 지정할 수 있다
+        - from 절을 생성, 반환값은 Criteria에서 사용하는 특별한 별칭
+            - 조회 시작점이라는 의미로 쿼리 루트라 한다
+        - select 절을 생성
+    - Criteria 쿼리를 완성하고 나면 다음 순서는 JPQL과 같다
+        - em.createQuery(cq)
+    - 검색 조검 + 정렬
+        - 검색 : cb.equal(m.get("username"), "회원1")
+        - 정렬 : cb.desc(m.get("age"))
+        - 만들어둔 조건을 where, orderBy에 넣어서 원하는 쿼리를 생성
+    - Criteria는 검색조건부터 정렬까지 Criteria 빌더를 사용해서 코드를 완성
+    - 쿼리 루트와 별칭
+        - 쿼리 루트 : 조회의 시작점
+        - Criteria에서 사용되는 특별한 별칭, JPQL의 별칭과 유사
+        - 엔티티에만 부여할 수 있다
+    - JPQL을 완성하는 도구이기에 경로 표현식도 있다
+        - m.get("team").get("name")
+- Criteria 쿼리 생성
+    - CriteriaBuilder.createQuery
+    - 반환 타입을 지정할수 있을 때와 없을 때(Object)
+- 조회
+    - 조회 대상을 한건, 여러건 지정
+        - cq.select(m)
+        - cq.multiselect(m.get("username"), m.get("age"))
+        - cq.select(cb.array(m.get("username"), m.get("age"))
+    - distinct
+        - cq.select(m).distinct(true)
+    - NEW, construct()
+        - 의미있는 객체로로 반환받고 싶을 때
+        - cq.select(cb.construct(MemberDTO.class, m.get("username"), m.get("age")))
+    - 튜플
+        - Map과 비슷한 튜플이라는 특별한 반환 객체
+        - cb.createTupleQuery(), cb.createQuery(Tuple.class)
+            - 튜플은 튜플의 검색키로 사용할 튜플 전용 별칭을 필수로 할당해야
+                - alias 메소드
+            - 선언해둔 튜플 별칭으로 데이터를 조회
+        - 이름 기반 - 순서기반의 Object[ ]보다 안전
+- 집합
+    - group by
+        - cq.groupBy(m.get("team").get("name"))
+    - having
+        - cq.groupBy(m.get("team").get("name")).having(cb.gt(minAge, 10))
+- 정렬
+    - cb.desc(...), cb.asc(...)
+- 조인
+    - join 메소드와 JoinType 클래스
+    - Join<Member, Team> t = m.join("team", JoinType.INNER)
+    - fetch join : m.fetch("team", JoinType.LEFT)
+- 서브쿼리
+    - 간단한 서브 쿼리
+        - mainQuery.subquery(...)
+        - 메인 쿼리 생성 부분의 where(..., subQuery)에서 생성한 서브 쿼리를 사용
+    - 상호 관련 서브 쿼리
+        - 서브쿼리에서 메인 쿼리의 정보를 사용하려면
+            - 메인쿼리에서 사용한 별칭을 얻어야
+        - 서브 쿼리는 메인 쿼리의 Root나 Join을 통해 생성된 별칭을 받아서 사용
+        - .where(cb.equal(subM.get("username"), m.get("username")))
+        - correlate() 메소드 : 메인 쿼리의 별칭을 서브쿼리에서 사용할 수 있다
+- IN 식
+    - cb.in(m.get("username"))
+- CASE 식
+    - cb.selectCase()
+      when(cb.ge(m.<Integer>get("age"), 60), 600)
+      when(cb.le(m.<Integer>get("age"), 15), 500)
+      otherwise(1000)
+- 파라미터 정의
+    - cb.paramegter(타입, 파라미터 이름) : 파라미터 정의
+    - setParameter("usernameParam", "회원1") : 해당 파라미터에 사용할 값을 바인딩
+- 네이티브 함수 호출
+    - cb.function("SUM", Long.class, m.get("age"))
+- 동적 쿼리
+    - 다양한 검색 조건에 따라 실행 시점에 쿼리를 생성하는 것
+    - 문자 기반(JPQL)보다 코드 기반(크리테리아)이 더 편리
+        - JPQL : 띄어쓰기와 where/and 위치 이슈 등
+        - 크리테리아에는 이런 이슈는 없으나 장황하고 복잡함으로 코드 가독성이 떨어짐
+- 함수 정리
+    - 조건 함수
+    - 스칼라와 기타 함수
+    - 집합 함수
+    - 분기 함수
+- Criteria 메타 모델 API
+    - 코드 기반 - 컴파일 시점에 오류를 발견 가능
+    - 하지만 일부는 문자 - 컴파일 에러로 발견 못함 - 완전한 코드기반은 아님
+        - 그래서 나타난 것이 메타 모델 API
+        - 메타 모델 클래스
+    - 표준 메타 모델 클래스 - 메타 모델
+        - 엔티티를 기반으로 만들어야
+        - 엔티티명_.java
+    - 코드 생성기 설정
+        - hibernate-jpamodelgen
+        - [https://docs.jboss.org/hibernate/stable/jpamodelgen/reference/en-US/html_single/](https://docs.jboss.org/hibernate/stable/jpamodelgen/reference/en-US/html_single/)
+
+
+
+## 4. QueryDSL
+
+- 쿼리를 문자가 아닌 코드로 작성해도 (크리테리아처럼)
+    - 쉽고 간결하며
+    - 그 모양도 쿼리와 비슷하게 개발할 수 있는 프로젝트
+    - JPQL 빌더 역할 (크리테리아처럼)
+    - 오프소스 프로젝트
+- 설정
+    - querydsl-jpa : QueryDSL JPA 라이브러리
+    - querydsl-apt : 쿼리 타입(Q)을 생성할 때 필요한 라이브러리
+    - 쿼리 타입 생성용 플러그인
+        - 크리테리아의 메타모델처럼 엔티티를 기반으로 쿼리 타입이라는 쿼리용 클래스를 생성
+    - 콘솔에서 mvn compile 입력 - 쿼리 타입 생성
+- 시작
+    - JPAQuery 객체를 생성해야
+        - 엔티티 매니저를 생성자에 넘겨준다
+        - 쿼리 타입 생성 : 생성자에는 별칭을 주면 된다
+            - JPQL에서 별칭으로 사용
+    - 기본 Q 생성
+        - 사용하기 편리하도록 기본 인스턴스를 보관
+        - 같은 엔티티 조인하거나 같은 엔ㄴ티티를 서브쿼리에 사용하고 싶을 때
+            - 별칭을 직접 지정해서 사용
+- 검색 조건 쿼리
+    - where절 다음으로 and, or 사용 가능
+    - where에 사용되는 메소드
+        - eq, between, contains, startsWith
+- 결과 조회
+    - 결과 조회 메소드를 사용하고 파라미터로 프로젝션 대상을 넘겨준다
+    - uniqueResult : 조회 결과가 한건일때
+    - singleResult : 결과가 하나 이상이면 처음 데이터를 반환
+    - list : 하나 이상일 때 혹은 빈 컬렉션
+- 페이징과 정렬
+    - orderBy(item.price.desc(), item.stockQuantity.asc())
+    .offset(10).limit(20)
+    - listResults : 전체 데이터 조회를 위한 count 쿼리를 한번더 실행
+        - SearchResults를 반환. 이 객체에서 전체 데이터 수를 조회할 수 있다
+- 그룹
+    - groupBy(item.price)
+    .having()item.price.gt(1000))
+- 조인
+    - join(조인 대상, 별칭으로 사용할 쿼리 타입)
+    - join(order.member, member)
+    .on(member.weight.gt(60))
+    - leftJoin(order.orderItems, orderItem).fetch()
+    - from절에 여러 조인을 사용하는 세타 조인
+        - from(order, member)
+- 서브 쿼리
+    - JPASubQuery를 생성해서 사용
+    - 결과 메소드 : unique, list
+- 프로젝션과 결과 반환
+    - 정의 : select 절에 조회대상을 지정하는 것
+    - 프로젝션 대상이 하나
+        - List<String> result = query.from(item).list(item.name)
+    - 여러 컬럼 반환과 튜플
+        - 프로젝션 대상으로 여러 필드를 선택하면
+        - Tuple : Map과 유사
+        - List<Tuple> result = query.from(item).list(item.name, item.price)
+    - 빈 생성
+        - 쿼리 결과를 엔티티가 아닌 특정 객체로 받고 싶다면
+        - 원하는 방법을 지정하기 위해 Projections를 사용
+        - 객체를 생성하는 다양한 방법
+            - 프로퍼티 접근
+                - List<ItemDTO> result = query.from(item).list(
+                  Projections.bean(ItemDTO.class, item.name.as("username"), item.price))
+                - bean 메소드 : 수정자(setter)를 사용해서 값을 채움
+                - 쿼리 결과와 매핑할 프로퍼티 이름이 다르면 as를 사용해서 별칭을 주면 됨
+            - 필드 직접 접근
+                - List<ItemDTO> result = query.from(item).list(
+                  Projections.fields(ItemDTO.class, item.name.as("username"), item.price))
+                - 필드에 직접 접근해서 값을 채움
+                - 필드를 private로 설정해도 동작
+            - 생성자 사용
+                - List<ItemDTO> result = query.from(item).list(
+                  Projections.constructor(ItemDTO.class, item.name.as("username"), item.price))
+                - 생성자를 사용. 물론 지정한 프로젝션과 파라미터 순서가 같은 생성자가 필요
+    - distinct
+        - query.distinct().from(item)...
+- 수정, 삭제 배치 쿼리
+    - JPQL 배치 쿼리와 같이 영속성 컨텍스트를 무시하고 데이터베이스를 직접 쿼리한드는 점에 유의
+    - 수정배치 쿼리 : JPAUpdateClause
+        - updateClause.where(item.name.eq("my book"))
+          .set(item.price, tiem.price.add(100)).excute()
+    - 삭제배치 쿼리 : JPADeleteClause
+- 동적 쿼리
+    - BooleanBuilder
+    - booleanBuilder.and(item.name.contains(param.getName()));
+    query.from(item).where(booleanBuilder).list(item);
+- 메소드 위임
+    - 쿼리 타입에 검색 조건을 직접 정의할 수 있다
+    - 정적 메소드를 만들고 + QueryDelegate 어노테이션에 속성으로 이 기능을 적용할 엔티티를 지정
+    - 정적 메소드
+        - 첫번째 파라미터 : 대상 엔티티의 쿼리 타입을 지정
+        - 나머지 : 필요한 파라미터를 정의
+        - String, Date 같은 엔티티가 아닌 자바 기본 내장 타입에도 메소드 위임기능을 사용할 수 있다.
+- 정리
+    - 문자가 아닌 코드로 안전하게 코드를 작성하고 싶다
+    - 복잡한 동적 쿼리를 어떻게 해결해야 하는가
+    - 크리테리아가 복잡해서 차라리 JPQL을 직접 사용?
+    - QueryDSL이 모두 만족
