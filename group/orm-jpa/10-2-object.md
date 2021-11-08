@@ -105,7 +105,7 @@
         - hibernate-jpamodelgen
         - [https://docs.jboss.org/hibernate/stable/jpamodelgen/reference/en-US/html_single/](https://docs.jboss.org/hibernate/stable/jpamodelgen/reference/en-US/html_single/)
 
-
+<br><br>
 
 ## 4. QueryDSL
 
@@ -206,3 +206,23 @@
     - 복잡한 동적 쿼리를 어떻게 해결해야 하는가
     - 크리테리아가 복잡해서 차라리 JPQL을 직접 사용?
     - QueryDSL이 모두 만족
+
+<br><br>
+    
+## 5. 네이티브 SQL
+
+JPQL은 표준 SQL이 지원하는 대부분의 문법과 SQL 함수들을 지원
+
+특정 데이터베이스에 종속적인 기능은 지원하지 않는다
+
+> <예시><br>
+특정 데이터베이스만 지원하는 함수, 문법, SQL 쿼리 힌트<br>
+인라인 뷰(From 절에서 사용하는 서브쿼리), union, intersect<br>
+스토어드 프로시저
+> 
+
+때로는 특정 데이터베이스에 종속적인 기능이 필요
+
+JPA 구현체들은 JPA 표준보다 더 다양한 방법을 지원
+
+
