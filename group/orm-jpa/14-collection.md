@@ -32,12 +32,15 @@
 - JPA 명세에는 자바 컬렉션 인터페이스에 대한 특별한 언급이 없다.
     - 따라서 JPA 구현체에 따라서 제공하는 기능이 조금씩 다를 수 있는데 여기서는 하이버네이트 구현체를 기준으로 이야기하겠다.
 
-    <aside>
-    📌 Map은 복잡한 매핑에 비해 활용도가 떨어지고 다른 컬렉션을 사용해도 충분하다.
-    Map은 @MapKey 어노테이션으로 매핑 가능하다
+<br>
 
-    </aside>
+<aside>
+📌 Map은 복잡한 매핑에 비해 활용도가 떨어지고 다른 컬렉션을 사용해도 충분하다.
+Map은 @MapKey 어노테이션으로 매핑 가능하다
 
+</aside>
+
+<br>
 
 ### 1.1. JPA와 컬렉션
 
@@ -75,8 +78,9 @@ after Persist = class org.hibernate.collection.internal.PersistentBag
 ```java
 Collection<Member> members = new ArrayLust<Member>();
 ```
+- 하이버네이트 내장 컬렉션과 특징 : p.613의 표 참고
 
-[하이버네이트 내장 컬렉션과 특징](https://www.notion.so/7dfa46de9d5b4ad18bb9dfc0fbe5a80f)
+
 
 ### 1.2. Collection, List
 
@@ -263,7 +267,10 @@ public class BooleanToYNConverter implements AttributeConverter<Boolean, String>
 }
 ```
 
-[Converter 속성](https://www.notion.so/bbb210fe153d4393a6b8948d0cc02329)
+- Converter 속성 : p.623의 표 참고
+
+<br>
+
 
 ## 3. 리스너
 
@@ -373,6 +380,7 @@ public class BooleanToYNConverter implements AttributeConverter<Boolean, String>
             - `javax.persistence.ExcludeDefaultListeners`
         - 상위 클래스 이벤트 리스너 무시
             - `javax.persistence.ExcludeSuperclassListeners`
+
 
         ```java
         @Entity
