@@ -532,17 +532,20 @@ List<Order> resultList =
 ```
 
 <aside>
-📌 다음 코드 같이 Order.member는 필수 관계로 설정되어 있다.
+📌 바로 위 코드와 같이 Order.member는 필수 관계로 설정되어 있다.
 
+`em.find()` 에서 엔티티 그래프를 사용하면, 하이버네이트는 필수 관계를 고려해서 내부 조인을 실행하지만, `JPQL` 같은 경우에는 항상 SQL 외부 조인을 사용. 만약 SQL 내부 조인을 사용하려면 다음처럼 내부 조인을 명시하면 된다.
+
+</aside>
+
+```java
 @ManyToOne(fetch = FetchType.LAZY, **optional = false**) // 필수 관계로 설정
 @JoinColumn(name = "MEMBER_ID")
 private Member member; // 주문 회원
 
-`em.find()` 에서 엔티티 그래프를 사용하면, 하이버네이트는 필수 관계를 고려해서 내부 조인을 실행하지만, `JPQL` 같은 경우에는 항상 SQL 외부 조인을 사용. 만약 SQL 내부 조인을 사용하려면 다음처럼 내부 조인을 명시하면 된다.
-
 select o from Order o join fetch o.member where o.id = :orderId
+```
 
-</aside>
 
 ### 4.5. 동적 엔티티 그래프
 
