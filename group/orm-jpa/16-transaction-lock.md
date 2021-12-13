@@ -222,5 +222,298 @@ properties.put("javax.persistence.lock.timeout", 10000);
 Board board = em.find(Board.class, "boardId", LockModeType.PESSIMISTIC_WRITE, properties);
 ```
 
+<br>
+
+## 2. 2차 캐시
+
+JPA가 제공하는 애플리케이션 범위의 캐시에 대해
+
+하이버네이트와 EHCACHE를 사용해서 실제 캐시를 적용
+
+- 1차 캐시와 2차 캐시
+    - 네트워크를 통해 데이터베이스에 접근하는 시간 비용
+        - 애플리케이션 서버에서 내부 메모리에 접근하는 시간 비용보다 수만에서 수십만 배 이상 비싸다.
+        - 따라서 조회한 데이터를 메로리에 캐시해서 데이터베이스 접근 횟수를 줄이면 애플리케이션 성능을 획기적으로 개선할 수 있다.
+    - 영속성 컨텍스트 내부에는 엔티티를 보관하는 저장소가 있는데 이것을 `1차 캐시`라 하며
+        - 이를 통해 얻을 수 있는 이점이 많지만, 일반적인 웹 어플리케이션 환경은 트랜잭션을 시작하고 종료할 때까지만 1차 캐시가 유효하다. (사견 : 캐시없이 그냥 DB에 접근하는 것과 큰 차이가 없을 듯. 매번 같은 결과만 조회하지는 않을테니)
+        - `OSIV`를 사용해도 클리언트의 요청이 들어올 때부터 끝날 때까지만 1차캐시가 유효하다.
+        - 따라서 어플리케이션 전체로 보면 **데이터베이스 접근 횟수를 획기적으로 줄이지는 못한다.**
+    - 하이버네이트를 포함한 대부분의 JPA 구현체들은 애플리케이션 범위의 캐시를 지원
+        - 이것을 공유 캐시 또는 `2차 캐시`라 한다.
+- 1차 캐시
+    - 1차캐시는 영속성 컨텍스트 내부에 있다.
+    - 엔티티 매니저로 조회하거나 변경하는 모든 엔티티는 1차캐시에 저장된다.
+    - 트랜잭션을 커밋하거나 플러시를 호출하면 1차캐시에 있는 엔티티의 변경 내역을 데이터베이스에 동기화 한다.
+    - JPA를 J2EE나 스프링 프레임워크 같은 컨테이너 위에서 실행하면
+        - 트랜잭션을 시작할 때 영속성 컨텍스트를 생성하고 트랜잭션을 종료할 때 영속성 컨텍스트도 종료
+    - OSIV를 사용하면 요청의 시작부터 끝까지 같은 영속성 컨텍스트를 유지
+    - 1차 캐시는 끄고 켤 수 있는 옵션이 아니다.
+        - **영속성 컨텍스트 자체가 사실상 1차 캐시다.**
+    - 1차 캐시의 동작 방법
+        1. 최초 조회할 때는 1차 캐시에 엔티티가 없으므로
+        2. 데이터베이스에서 엔티티를 조회해서
+        3. 1차 캐시에 보관하고
+        4. 1차 캐시에 보관한 결과를 반환한다
+        5. 이후 같은 엔티티를 조회하면 1차 캐시에 같은 엔티티가 있으므로 데이터베이스를 조회하지 않고 1차 캐시의 엔티티를 그대로 반환한다.
+    - 1차캐시의 특징
+        - 1차 캐시는 같은 엔티티가 있으면 해당 엔티티를 그대로 반환
+            - 즉, 동일성(a==b)을 보장한다.
+        - 1차 캐시는 기본적으로 영속성 컨텍스트 범위의 캐시다.
+        (컨테이너 환경에서는 트랜잭션 범위의 캐시, OSIV를 적용하면 요청 범위의 캐시)
+- 2차 캐시
+    - **애플리케이션에서 공유하는 캐시**를 JPA는 공유 캐시(shared cache)라 하는데
+        - 일반적으로 2차 캐시(second level cache, L2 cache)라 부른다.
+        - 애플리케이션 범위의 캐시다. (애플리케이션을 종료할 때까지 캐시가 유지)
+    - 분산 캐시나 클러스터링 환경의 캐시는 애플리케이션보다 더 오래 유지된다.
+        - 2차 캐시를 적용하면 엔티티 매니저를 통해 데이터를 조회할 때 우선 2차 캐시에서 찾고 없으면 데이터베이스에서 찾는다.
+        - 2차 캐시를 적절히 활용하면 데이터베이스 조회 횟수를 획기적으로 줄일 수 있다.
+    - 2차 캐시의 동작 방식
+        1. 영속성 컨텍스트는 엔티티가 필요하면 2차 캐시를 조회
+        2. 2차 캐시에 엔티티가 없으면 데이터베이스를 조회
+        3. 결과를 2차 캐시에 보관
+        4. 2차 캐시는 자신이 보관하고 있는 엔티티를 복사해서 반환
+        5. 2차 캐시에 저장되어 있는 엔티티를 조회하면 복사본을 만들어 반환
+    - 동시성을 극대화하려고 캐시한 객체를 직접 반환하지 않고 복사본을 만들어서 반환한다.
+    (락에 비하면 객체를 복사하는 비용이 저렴)
+    - 2차 캐시의 특징
+        - 영속성 유닛 범위의 캐시
+        - 조회한 객체를 그대로 반환하는 것이 아니라 **복사본을 만들어서 반환**
+        - 데이터베이스 기본 키를 기준으로 캐시하지만
+            - 영속성 컨텍스트가 다르면 객체 동일성(a==b)을 보장하지 않는다.
+- JPA 2차 캐시 기능
+    - JPA 구현체 대부분은 캐시 기능을 각자 지원했는데
+        - JPA는 2.0에 와서야 캐시 표준을 정의했다.
+    - JPA 캐시 표준은 여러 구현체가 공통으로 사용하는 부분만 표준화해서
+        - 세밀한 설정을 하려면 구현체에 의존적인 기능을 사용해야 한다.
+- 캐시 모드 설정
+    - 2차 캐시를 사용하려면 javax.persistence.Cacheable 어노테이션을 사용
+    - @Casheable(true), @Cacheable(false) 설정할 수 있는데 기본값은 true이다.
+    - persistence.xml에 shared-cache-mode를 설정해서 애플리케이션 전체에(정확히는 영속성 유닛 단위) 캐시를 어떻게 적용할지 옵션을 설정해야 한다.
+
+    ```java
+    @Cacheable
+    @Entity
+    public class Member {
+    	@Id @GeneratedValue
+        private Long id;
+
+        ...
+    }
+
+    // persistence.xml에 캐시 모드 설정
+    <persistence-unit name="test">
+    	<shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>
+    </persistence-unit>
+
+    // 캐시 모드 스프링 프레임워크 XML 설정
+    <bean id="entitiMangerFacotry" class="org.springframework.orm.jpa.LocalContainerEntityMangerFactoryBean">
+    	<property name="sharedCacheMode" value="ENABLE_SELECTIVE"/>
+        ...
+    ```
+
+- SharedCacheMode 캐시 모드 설정
+    - ALL: 모든 엔티티를 캐시한다.
+    - NONE: 캐시를 사용하지 않는다.
+    - **ENABLE_SELECTIVE: Cacheable(true)로 설정된 엔티티만 캐시를 적용한다. -> 보통 많이 사용**
+    - DISABLE_SELECTIVE: 모든 엔티티를 캐시하는데 Cacheable(false)로 명시된 엔티티는 캐시하지 않는다.
+    - UNSPECIFIED: JPA 구현체가 정의한 설정을 따른다.
+- 캐시 조회, 저장 방식 설정
+    - 캐시를 무시하고 데이터베이스를 직접 조회하거나 캐시를 갱신하려면 캐시 조회 모드와 캐시 보관 모드를 사용하면 된다.
+    - 프로퍼티 이름
+        - javax.persistence.cache.retrieveMode: 캐시 조회 모드 프로퍼티 이름
+        - javax.persistence.cache.storeMode: 캐시 보관 모드 프로퍼티 이름
+    - 옵션
+        - javax.persistence.CacheRetrieveMode: 캐시 조회 모드 설정 옵션
+        - javax.persistence.CacheStoreMode: 캐시 보관 모드 설정 옵션
+    - 캐시 모드는 EntityManager.setProperty()로 엔티티 매니저 단위로 설정할 수 있다.
+        - 혹은 EntityManager.find(), EntityManager.refresh()에 설정할 수 있다. (예제 16.12)
+        - 그리고 Query.setHint()에 사용할 수 있다. (예제 16.13)
+
+        ```java
+        // 캐시 조회 모드
+        public enum CacheRetrieveMode {
+        		USE, // 캐시에서 조회
+        		BYPASS // 캐시를 무시하고 데이터베이스에 직접 접근
+        }
+
+        // 캐시 보관 모드
+        public enum CacheStoreMode {
+        		USE, // 조회한 데이터를 캐시에 저장
+        		BYPASS, // 캐시에 저장하지 않음
+        		REFRESH // 데이터베이스에서 조회한 엔티티를 최신 상태로 다시 캐시
+        }
+        ```
+
+- JPA 캐시 관리 API
+    - JPA는 캐시를 관리하기 위한 javax.persistence.Cache 인터페이스를 제공한다.
+    - 이것은 EntityManagerFactory에서 구할 수 있다.
+
+    ```java
+    Cache cache = emf.getCache();
+
+    boolean contains = cache.contains(TestEntity.class, testEntity.getId());
+    log.info("contains : {}", contains);
+
+    // Cache 인터페이스
+    public interface Cache {
+    		// 해당 엔티티가 캐시에 있는지 확인
+    		public boolean contains(Class cls, Object primaryKey);
+
+    		// 해당 엔티티중 특정식별자를 가진 엔티티를 캐시에서 제거;
+    		public void evict(Class cls, Object primaryKey);
+
+    		// 해당 엔티티 전체를 캐시에서 제거
+    		public void evict(Class cls);
+
+    		// 모든 캐시 데이터 제거
+    		public void evictAll();
+
+    		// JPA Cache 구현체 조회
+    		public <T> T unwrap(Class<T> cls);
+    }
+    ```
+
+- 하이버네이트와 EHCACHE 적용
+    - 하이버네이트가 지원하는 3가지 캐시
+        1. 엔티티 캐시 : 엔티티 단위로 캐시한다. 식별자로 엔티티를 조회하거나 컬렉션이 아닌 연관된 엔티티를 로딩할 때 사용한다.
+        2. 컬렉션 캐시 : 엔티티와 연관된 컬렉션을 캐시한다. **컬렉션이 엔티티를 담고 있으면 식별자 값만 캐시**한다(하이버네이트 기능)
+        3. 쿼리 캐시 : 쿼리와 파라미터 정보를 키로 사용해서 캐시한다. **결과가 엔티티면 식별자 값만 캐시**한다.(하이버네이트 기능)
+    - 참고로 JPA 표준에는 엔티티 캐시만 정의되어 있다.
+    - 환경설정
+        - 하이버네이트에서 EHCAHE를 사용하려면
+            - hibernate-ehcache 라이브러리를 추가한다.
+            - hibernate-ehcache를 추가하면 net.sf.ehcache-core 라이브러리도 추가된다.
+        - EHCACHE는 ehcache.xml을 설정 파일로 사용한다.
+        - 예제 16.16 ~ 16.18
+
+    ```java
+    // ehchace.xml 추가
+    <ehcache>
+    	<defaultCache
+        	maxElementsInMemory="10000"
+            eternal="false" // 저장된 캐시를 제거할지 여부를 설정한다. true 인 경우 저장된 캐시는 제거되지 않으며 timeToIdleSeconds, timeToLiveSeconds 설정은 무시된다.
+            timeToIdleSeconds="1200"
+            timeToLiveSeconds="1200"
+            diskExpiryThreadIntervalSeconds="1200"
+            memoryStoreEvictionPolicy="LRU"
+            />
+    </ehacahe>
+
+    // persistence.xml에 캐시 정보 추가
+    <persitence-unit name="test">
+    	<shared-cahce-mode>ENABLE_SELECTIVE</shared-cache-modE>
+        <properties>
+        	// 2차 캐시 활성화, 엔티티 캐시와 컬렉션 캐시를 사용할 수 있음
+        	<property name="hibernate.cache.use_second_level_cache" value="true"/>
+            // 쿼리 캐시 활성화
+            <proeprty name="hibernate.cache.use_query_cache" value="true"/>
+            // 2차 캐시를 처리할 클래스 지정
+            <property name="hibernate.cache.region.factory_class" value="org.hibernate.cache.ehcache.EhacheRegionFactory"/>
+            // 하이버네이트가 여러 콩계 정보를 출력해주는데 캐시 적용 여부를 확인할 수 있음 (성능에 영향을 주므로 개발 환겨에서만 적용)
+            <property name="hibernate.generate_statistics" value="true"/>
+            ...
+    </persistence-unit>
+    ```
+
+- 엔티티 캐시와 컬렉션 캐시
+
+    ```java
+    // 캐시 적용 코드
+    @Cacheable // 엔티티 캐시 적용
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE) // 하이버네이트 전용. 캐시와 관련된 더 세밀한 설정할 때 사용
+    @Entity
+    public class ParentMember {
+    	...
+
+        @Cache(usage = CahceConcurrencyStrategy.READ_WRITE) // 컬렌션 캐시 적용
+        @OneToMany(mappedBy = "parentMember", cascade = CascadeType.ALL)
+        private List<ChidMember> childMembers = new ArrayList<ChildMember>();
+        ....
+    }
+    ```
+
+    - @Cache
+        - 하이버네이트 전용인 org.hibernate.annotations.Cache 어노테이션을 사용하면 세밀한 캐시 설정이 가능
+        - 속성
+            - usage
+                - CacheConcurrencyStrategy를 사용해서 캐시 동시성 전략을 설정한다.
+                - NONE, READ_ONLY, NONSTRICT_READ_WRITE, READ_WRITE, TRANSACTIONAL (표 16.5)
+            - regin
+                - 캐시 지역 설정
+            - include
+                - 연관 객체를 캐시에 포함할지 선택한다. all(기본값), non-lazy 옵션을 선택할 수 있다.
+        - 캐시 종류에 따라 동시성 전략 지원 여부는 하이버네이트 공식문서가 제공하는 표를 참고하자. (표 16.6)
+        - ConcurrentHashMap은 개발 시에만 사용해야 한다. (질문 : [Why](http://blog.breakingthat.com/2019/04/04/java-collection-map-concurrenthashmap/)?)
+    - 캐시 영역
+        - 위에서 캐시를 적용한 코드는 다음 캐시 영역에 저장된다
+        - 엔티티 캐시 영역
+            - jpabook.jpashop.domain.test.cache.ParentMember
+            - [패키지 명 + 클래스 명]
+        - 컬렉션 캐시 영역
+            - jpabook.jpashop.domain.test.cache.ParentMember.childMembers
+            - [패키지 명 + 클래스 명 + 필드 명]
+        - @Cache(region = "customRegion", ...)처럼 region 속성을 사용해서 캐시 영역을 직접 지정 할 수 있다.
+        - 캐시 영역을 위한 접두사 설정은 persistence.xml 설정에 hibernate.cache.region_prefix를 사용하면 된다.
+    - 쿼리 캐시
+        - 쿼리 캐시는 쿼리와 파라미터 정보를 키로 사용해서 쿼리 결과를 캐시하는 방법
+        - 쿼리 캐시를 적용하려면 유닛을 설정에 `hibernate.cache.use_query_cache` 옵션을 꼭 `true`로 설정해야 한다.
+
+        ```java
+        // 쿼리 캐시 적용
+        em.createQuery("select i from Item i", Item.class)
+        		**.setHint("org.hibernate.cacheable", true)**
+        		.getResultList();
+
+        // NamedQuery에 쿼리 캐시 적용
+        @Entity
+        @NamedQuery(
+        				**hints = @QueryHint(name = "org.hibernate.cacheable",
+        					value = "true"),**
+        				name = "Member.findByUsername",
+        				query = "select m.address from Member m where m.name = :username"
+        )
+        public class Member {
+        	...
+        }
+        ```
+
+    - 쿼리 캐시 영역
+        - `hibernate.cache.use_query_cache` 옵션을 `true`로 설정해서 쿼리 캐시를 활성화하면 다음 두 캐시 영역이 추가된다.
+        - org.hibernate.cache.internal.StandardCache
+            - 쿼리 캐시를 저장하는 영역이다. 이곳에는 쿼리, 쿼리 결과 집합, 쿼리를 실행한 시점의 타임스탬프를 보관한다.
+        - org.hibernate.cache.spi.UpdateTimestampsCache
+            - 쿼리 캐시가 유효한지 확인하기 위해 쿼리 대상 테이블의 가장 최근 변경 시간을 저장하는 영역이다.
+        - 쿼리 캐시는 캐시한 데이터 집합을 최신 데이터로 유지하려고 쿼리 캐시를 실행하는 시간과 쿼리 캐시가 사용하는 테이블들이 가장 최근에 변경된 시간을 비교한다.
+            - 쿼리 캐시가 사용하는 테이블에 조금이라도 변경이 있으면 데이터베이스에서 데이터를 읽어 와서 쿼리 결과를 다시 캐시한다.
+        - 쿼리 캐시를 잘 활용하면 **극적인 성능 향상이 있지만 빈번하게 변경이 있는 테이블에 사용하면 오히려 성능이 더 저하된다**.
+            - 따라서 **수정이 거의 일어나지 않는 테이블에 사용해야 효과를 볼 수 있다.**
+
+        <aside>
+        📌 org.hibernate.cache.spi.UpdateTimestampsCache 쿼리 캐시 영역은 만료되지 않도록 설정해야 한다. 해당 영역이 만료되면 모든 쿼리 캐시가 무효화된다. EHCACHE의 eternal=”true” 옵션을 사용하면 캐시에서 삭제되지 않는다.
+
+        </aside>
+
+    - 쿼리 캐시와 컬렉션 캐시의 주의점
+        - 엔티티 캐시를 사용해서 엔티티를 캐시하면 엔티티 정보를 모두 캐시하지만
+            - 쿼리 캐시와 컬렉션 캐시는 **결과 집합의 식별자 값만 캐시**한다.
+            - 그리고 이 식별자 값을 하나씩 엔티티 캐시에서 조회해서 실제 엔티티를 찾는다.
+        - 문제는 쿼리 캐시나 컬렉션 캐시만 사용하고 대상 엔티티에 엔티티 캐시를 적용하지 않으면 성능상 심각한 문제가 발생할 수 있다.
+            1. `select m from Member m` 쿼리를 실행 했는데 쿼리 캐시가 적용되어 있다. 결과 집합은 100건이다.
+            2. 결과 집합에는 식별자만 있으므로 한 건씩 엔티티 캐시 영역에서 조회한다.
+            3. `Member` 엔티티는 엔티티 캐시를 사용하지 않으므로 한 건씩 데이터베이스에서 조회한다.
+            4. 결국 100건의 SQL이 실행된다.
+        - 쿼리 캐시나 컬렉션 캐시만 사용하고 엔티티 캐시를 사용하지 않으면 최악의 상황에 결과 집합 수만큼 SQL이 실행된다. (질문 : N+1과 다른가?)
+        - ***따라서 쿼리 캐시나 컬렉션 캐시를 사용하면 결과 대상 엔티티에는 꼭 엔티티 캐시를 적용해야 한다.***
+
+<br>
+
+## 3. 정리
+
+- 트랜잭션의 격리 수준은 4단계가 있다. 격리 수준이 낮을수록 동시성은 증가하지만 격리 수준에 따른 다양한 문제가 발생한다.
+- 영속성 컨텍스트는 데이터베이스 트랜잭션이 READ COMMITTED 격리 수준이어도 애플리케이션 레벨에서 반복 가능한 읽기(REPEATABLE READ)를 제공한다.
+- JPA는 낙관적 락과 비관적 락을 지원한다.
+    - 낙관적 락 : 애플리케이션이 지원하는 락
+    - 비관적 락 : 데이터베이스 트랜잭션 락 메커니즘에 의존한다.
+- 2차 캐시를 사용하면 애플리케이션의 조회 성능을 극적으로 끌어올릴 수 있다.
 
 ㄲ
