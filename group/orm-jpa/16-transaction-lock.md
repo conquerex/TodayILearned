@@ -62,10 +62,11 @@
         - 애플리케이션 대부분은 동시성 처리가 중요하므로 데이터베이스들은 보통 READ UNCOMMITTED 격리 수준을 기본으로 사용한다.
             - 일부 중요한 비지니스 로직에 더 높은 격리 수준이 필요하면 데이터베이스 트랜잭션이 제공하는 잠금 기능을 사용하면 된다.
 
-        <aside>
-        📌 트랜잭션 격리 수준에 따른 동작 방식은 데이터베이스마다 조금씩 다르다. 최근에는 데이터베이스들이 더 많은 동시성 처리를 위해 락보다는 MVCC(Multiversion_concurrency_control)을 사용하므로 락을 사용하는 데이터베이스와 약간 다른 특성을 지닌다.
+        <br>
+       
+        > 📌 트랜잭션 격리 수준에 따른 동작 방식은 데이터베이스마다 조금씩 다르다. 최근에는 데이터베이스들이 더 많은 동시성 처리를 위해 락보다는 MVCC(Multiversion_concurrency_control)을 사용하므로 락을 사용하는 데이터베이스와 약간 다른 특성을 지닌다.
 
-        </aside>
+        <br>
 
 - 낙관적 락과 비관적 락 기초
     - JPA의 영속성 컨텍스트(1차 캐시)를 적절히 활용하면 데이터베이스 트랜잭션이 READ COMMITTED 격리 수준(3번째로 엄격한 수준)이어도 애플리케이션 레벨에서 반복 가능한 읽기 REPEATABLE READ(2번째로 엄격한 수준)가 가능하다.
@@ -131,11 +132,13 @@
     - 버전은 엔티티의 값을 변경하면 증가한다.
     - 연관관계 필드는 외래 키를 관리하는 **연관관계의 주인 필드를 수정할 때만** 버전이 증가
 
-<aside>
-📌 벌크 연산은 버전을 무시한다. 벌크 연산에서 버전을 증가하려면 버전 필드를 강제로 증가시켜야 한다.
+<br>
+
+> 📌 벌크 연산은 버전을 무시한다. 벌크 연산에서 버전을 증가하려면 버전 필드를 강제로 증가시켜야 한다.
 update Member m set [m.name](http://m.name/) = '변경', m.version = m.version + 1
 
-</aside>
+<br>
+
 
 - JPA 락 사용
     - 락은 다음 위치에 적용할 수 있다.
@@ -145,10 +148,11 @@ update Member m set [m.name](http://m.name/) = '변경', m.version = m.version +
     - JPA가 제공하는 락 옵션은 javax.persistence.LockModeType에 정의되어 있다.
     - 표 16.2 LockModeType 속성 (p.701)
 
-<aside>
-📌 JPA를 사용할 때 추천하는 전략은 `READ COMMITED` 트랜잭션 격리 수준 + 낙관적 버전 관리(두 번의 갱신 내역 분실 문제 예방)이다.
+<br>
 
-</aside>
+> 📌 JPA를 사용할 때 추천하는 전략은 `READ COMMITED` 트랜잭션 격리 수준 + 낙관적 버전 관리(두 번의 갱신 내역 분실 문제 예방)이다.
+
+<br>
 
 - JPA 낙관적 락
     - 낙관적 락을 사용하려면 버전이 있어야 한다.
@@ -158,10 +162,11 @@ update Member m set [m.name](http://m.name/) = '변경', m.version = m.version +
         - org.hibernate.StaleObjectStateException(하이버네이트 예외)
         - org.springframework.orm.ObjectOptimisticLockingFailureException(스프링 예외 추상화)
 
-        <aside>
-        📌 일부 JPA 구현체 중에는 @Version 컬럼 없이 낙관적 락을 허용하기도 하지만 추천하지는 않는다
+        <br>
 
-        </aside>
+        > 📌 일부 JPA 구현체 중에는 @Version 컬럼 없이 낙관적 락을 허용하기도 하지만 추천하지는 않는다
+
+        <br>
 
     - 락 옵션 없이 `@Version` 만 있어도 낙관적 락이 적용된다.
     - 락 옵션을 사용하면 락을 더 세밀하게 제어할 수 있다.
@@ -488,10 +493,12 @@ JPA가 제공하는 애플리케이션 범위의 캐시에 대해
         - 쿼리 캐시를 잘 활용하면 **극적인 성능 향상이 있지만 빈번하게 변경이 있는 테이블에 사용하면 오히려 성능이 더 저하된다**.
             - 따라서 **수정이 거의 일어나지 않는 테이블에 사용해야 효과를 볼 수 있다.**
 
-        <aside>
-        📌 org.hibernate.cache.spi.UpdateTimestampsCache 쿼리 캐시 영역은 만료되지 않도록 설정해야 한다. 해당 영역이 만료되면 모든 쿼리 캐시가 무효화된다. EHCACHE의 eternal=”true” 옵션을 사용하면 캐시에서 삭제되지 않는다.
 
-        </aside>
+        <br>
+        
+        > 📌 org.hibernate.cache.spi.UpdateTimestampsCache 쿼리 캐시 영역은 만료되지 않도록 설정해야 한다. 해당 영역이 만료되면 모든 쿼리 캐시가 무효화된다. EHCACHE의 eternal=”true” 옵션을 사용하면 캐시에서 삭제되지 않는다.
+
+        <br>
 
     - 쿼리 캐시와 컬렉션 캐시의 주의점
         - 엔티티 캐시를 사용해서 엔티티를 캐시하면 엔티티 정보를 모두 캐시하지만
