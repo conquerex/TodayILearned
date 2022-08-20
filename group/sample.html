@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+</head>
+
+<body>
+
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <aside></aside>
+  <div id="main">
+    <h1 class="auto-style1"> Flip a coin </h1>
+
+    <h2>Make a guess! Head or Tail?
+    </h2>
+
+    <script>
+      function myFunction1() {
+
+        var $ball = document.getElementById("Coin");
+        var ran = Math.random();
+        var $pic = document.getElementById("pic");
+        var x = Math.floor(ran * 2);
+        var y = 0
+
+        if (x) {
+          y = 0
+        } else {
+          y = 1
+        }
+        alert(x + ' / ' + y)
+        var head = getCookie("head")
+        var tail = getCookie("tail")
+        alert(head + ' / ' + tail)
+        if (head + tail) {
+          alert('true...')
+          oldX = Number(head)
+          oldY = Number(tail)
+          setCookie(oldX + x, oldY + y)
+        } else {
+          alert('false...')
+          setCookie(x, y)
+        }
+
+        var newHead = getCookie('head')
+        alert( document.cookie );
+
+      }
+
+      function setCookie(head_value, tail_value) {
+        alert('setCookie...')
+        let todayDate = new Date();
+        todayDate.setDate(todayDate.getDate() + (24 * 60 * 60 * 1000));
+        document.cookie = 'head=' + escape(head_value) + '; tail=' + escape(tail_value) + '; path=/; expires=' + todayDate.toGMTString() + '; domain=example.com;';
+        alert('setCookie... done >>> ' + document.cookie)
+      }
+
+      function getCookie(cookie_name) {
+        var x, y;
+        var val = document.cookie.split(';');
+
+        for (var i = 0; i < val.length; i++) {
+          x = val[i].substr(0, val[i].indexOf('='));
+          y = val[i].substr(val[i].indexOf('=') + 1);
+        }
+      }
+    </script>
+    <button type="button" onclick="javascript:myFunction1()" id="Call">Click me to start!</button>
+    <p id="pic"></p>
+
+  </div>
+  <footer>
+  </footer>
+</body>
+
+</html>
